@@ -4,8 +4,10 @@ import com.example.model.BenhNhan;
 import com.example.service.IBenhAnService;
 import com.example.service.IBenhNhanService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,41 +21,55 @@ public class BenhNhanRestController {
     @Autowired
     private IBenhAnService iBenhAnService;
 
-    @GetMapping(value = "")
-    public ResponseEntity<List<BenhNhan>> getList() {
-        List<BenhNhan> benhNhanList = iBenhNhanService.getAll();
-        if (benhNhanList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(benhNhanList, HttpStatus.OK);
+
+//
+//    @GetMapping
+//    public Page<BenhNhan> getList(@PageableDefault(size =5) Pageable pageable) {
+//        return iBenhNhanService.findAll(pageable);
+//    }
+
+    @GetMapping
+    public Page<BenhNhan> getListBySearch(@PageableDefault(size =2) Pageable pageable,@RequestParam(defaultValue = "") String ten,@RequestParam(defaultValue = "") String bacSi) {
+        return iBenhNhanService.getListBySearch(pageable,ten,bacSi);
     }
 
-    @PostMapping(value = "")
-    public ResponseEntity<?> save(@RequestBody BenhNhan benhNhan) {
-        System.out.println(benhNhan.getId());
-        benhNhan.setBenhAn(iBenhAnService.findById(benhNhan.getBenhAn().getId()).get());
+
+//    @GetMapping
+//    public List<BenhNhan> getList() {
+//        List<BenhNhan> benhNhanList = iBenhNhanService.getAll();
+//        return benhNhanList;
+//    }
+
+    @PostMapping
+    public BenhNhan save(@RequestBody BenhNhan benhNhan) {
         iBenhNhanService.save(benhNhan.getBacSi(), benhNhan.getLyDo(), benhNhan.getNgayNhapVien(), benhNhan.getNgayRaVien(), benhNhan.getPhuongPhap(), benhNhan.getTen(), benhNhan.getBenhAn().getId());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return benhNhan;
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody BenhNhan benhNhan, @PathVariable("id") int id) {
+    @GetMapping("/{id}")
+    private BenhNhan findById(@PathVariable int id) {
+        BenhNhan benhNhan = iBenhNhanService.findById(id);
+        return benhNhan;
+    }
+
+
+    @PatchMapping("/{id}")
+    public BenhNhan update(@RequestBody BenhNhan benhNhan, @PathVariable("id") int id) {
         BenhNhan benhNhan1 = iBenhNhanService.findById(id);
         if (benhNhan1 == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return null;
         }
-        iBenhNhanService.update(benhNhan.getBacSi(), benhNhan.getLyDo(), benhNhan.getNgayNhapVien(), benhNhan.getNgayRaVien(), benhNhan.getPhuongPhap(), benhNhan.getTen(), benhNhan.getBenhAn().getId(), benhNhan.getId());
-        return new ResponseEntity<>(benhNhan, HttpStatus.OK);
+        iBenhNhanService.update(benhNhan.getBacSi(), benhNhan.getLyDo(), benhNhan.getNgayNhapVien(), benhNhan.getNgayRaVien(), benhNhan.getPhuongPhap(), benhNhan.getTen(), benhNhan.getBenhAn().getId(), id);
+        return benhNhan;
 
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") int id) {
+    public void delete(@PathVariable("id") int id) {
         BenhNhan benhNhan = iBenhNhanService.findById(id);
-        if (benhNhan == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         iBenhNhanService.delete(id);
-        return new ResponseEntity<>(benhNhan, HttpStatus.OK);
     }
+
+
 }
+

@@ -15,7 +15,8 @@ public class BenhNhan {
     private String bacSi;
     @ManyToOne
     private BenhAn benhAn;
-    private boolean delete_flag;
+    @Column(columnDefinition="bit default 0")
+    private boolean delete_flag=false;
 
     public BenhNhan() {
     }
@@ -30,6 +31,17 @@ public class BenhNhan {
         this.bacSi = bacSi;
         this.benhAn = benhAn;
         this.delete_flag = delete_flag;
+    }
+
+    public BenhNhan(int id, String ten, String ngayNhapVien, String ngayRaVien, String lyDo, String phuongPhap, String bacSi, BenhAn benhAn) {
+        this.id = id;
+        this.ten = ten;
+        this.ngayNhapVien = ngayNhapVien;
+        this.ngayRaVien = ngayRaVien;
+        this.lyDo = lyDo;
+        this.phuongPhap = phuongPhap;
+        this.bacSi = bacSi;
+        this.benhAn = benhAn;
     }
 
     public int getId() {

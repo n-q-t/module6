@@ -4,6 +4,8 @@ import com.example.model.BenhNhan;
 import com.example.repository.IBenhNhanRepository;
 import com.example.service.IBenhNhanService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,11 @@ public class BenhNhanService implements IBenhNhanService {
     @Override
     public List<BenhNhan> getAll() {
         return iBenhNhanRepository.getAll();
+    }
+
+    @Override
+    public Page<BenhNhan> findAll(Pageable pageable) {
+        return iBenhNhanRepository.findAll(pageable);
     }
 
     public void save(String bacSi, String lyDo, String ngayNhapVien, String ngayRaVien, String phuongPhap, String ten, int benhAnId) {
@@ -34,9 +41,12 @@ public class BenhNhanService implements IBenhNhanService {
 
     @Override
     public void update(String bacSi, String lyDo, String ngayNhapVien, String ngayRaVien, String phuongPhap, String ten, int benhAnId, int id) {
-        iBenhNhanRepository.update(bacSi,lyDo,ngayNhapVien,ngayRaVien,phuongPhap,ten,benhAnId,id);
+        iBenhNhanRepository.update(bacSi, lyDo, ngayNhapVien, ngayRaVien, phuongPhap, ten, benhAnId, id);
     }
 
-    ;
+    @Override
+    public Page<BenhNhan> getListBySearch(Pageable pageable, String ten, String bacSi) {
+        return iBenhNhanRepository.getListBySearch(pageable,ten,bacSi);
+    }
 
 }
