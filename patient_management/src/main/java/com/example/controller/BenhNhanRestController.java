@@ -29,7 +29,7 @@ public class BenhNhanRestController {
 //    }
 
     @GetMapping
-    public Page<BenhNhan> getListBySearch(@PageableDefault(size =2) Pageable pageable,@RequestParam(defaultValue = "") String ten,@RequestParam(defaultValue = "") String bacSi) {
+    public Page<BenhNhan> getListBySearch(@PageableDefault(page = 0,size =5) Pageable pageable,@RequestParam(defaultValue = "") String ten,@RequestParam(defaultValue = "") String bacSi) {
         return iBenhNhanService.getListBySearch(pageable,ten,bacSi);
     }
 
